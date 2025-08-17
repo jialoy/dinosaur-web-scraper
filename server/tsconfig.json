@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "target": "ES6",
+        "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "skipLibCheck": true,
+        "moduleResolution": "nodenext"
+    },
+    "include": ["server.ts"]
+}
