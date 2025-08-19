@@ -1,1 +1,19 @@
-<p>Logging dino data to console!</p>
+<div class="main-container">
+  <app-dropdown
+    [dinosaurs]="dinosaurs"
+    [selectedDinosaur]="selectedDinosaurName"
+    (dinosaurSelected)="onDinosaurSelected($event)"
+  ></app-dropdown>
+
+  <div *ngIf="!selectedDinosaur && dinosaurs.length > 0" class="no-selection">
+    <p>Dinosaur data loaded!</p>
+  </div>
+
+  <div *ngIf="dinosaurs.length === 0" class="loading">
+    <p>Retrieving dinosaur data...</p>
+  </div>
+
+  <div *ngIf="selectedDinosaur" class="info">
+    <p>Currently logging {{ selectedDinosaur.name }} to console!</p>
+  </div>
+</div>

@@ -1,14 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { wordsToNumbers } from "words-to-numbers";
-
-export interface DinosaurEntry {
-  name: string;
-  historicalPeriod: string;
-  length: string;
-  weight: string;
-  diet: string;
-}
+import { DinosaurEntry } from "../src/app/shared/types";
 
 /**
  * Scrape a single page and extract data for every dinosaur entry found on the page.

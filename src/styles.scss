@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+@import "./assets/styles/variables";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $font-colour-primary;
+  background-color: $body-bg;
+}

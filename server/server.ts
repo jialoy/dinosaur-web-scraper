@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { scrapePage, addCladeDataToEntries, DinosaurEntry, extractValsToArray } from "./scraper";
+import { scrapePage, addCladeDataToEntries, extractValsToArray } from "./scraper";
+import { DinosaurEntry } from "../src/app/shared/types";
 
 const app = express();
 const port = 3000; // Running scraper server on this port

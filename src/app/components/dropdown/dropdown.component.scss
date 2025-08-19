@@ -1,0 +1,119 @@
+@import "../../../assets/styles/variables";
+
+.dropdown-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 50px 0;
+
+  .dropdown-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: $font-colour-primary;
+  }
+
+  .dropdown-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px 16px;
+    border: 2px solid $border-colour;
+    border-radius: $border-radius;
+    background-color: $body-bg;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+
+    &:hover {
+      border-color: $border-colour-hover;
+    }
+
+    .selected-text {
+      color: $font-colour-primary;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .arrow {
+      color: $font-colour-primary;
+      font-size: 12px;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 10px;
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: $body-bg;
+    border: 2px solid $border-colour;
+    border-radius: $border-radius;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dropdown-options {
+      max-height: 450px;
+      overflow-y: auto;
+
+      // Custom scrollbar styling
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $body-bg;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $border-colour-hover;
+        border-radius: 3px;
+
+        &:hover {
+          background: $border-colour-active;
+        }
+      }
+
+      .option {
+        padding: 6px 16px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        color: $font-colour-primary;
+
+        &:hover {
+          background-color: $border-colour;
+          color: $font-colour-primary;
+        }
+
+        &.selected {
+          //   background-color: lighten($border-colour-hover, 20%);
+          color: $font-colour-primary;
+          font-weight: 600;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
