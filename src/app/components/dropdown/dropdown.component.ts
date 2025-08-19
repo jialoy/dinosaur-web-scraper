@@ -8,7 +8,7 @@ import { DinosaurEntry } from "../../../app/shared/types";
   imports: [CommonModule],
   template: `
     <div class="dropdown-container">
-      <label class="dropdown-label">Select a Dinosaur:</label>
+      <label class="dropdown-label">Dinosaur:</label>
       <div class="dropdown-trigger" (click)="toggleDropdown()" [class.open]="isOpen">
         <span class="selected-text">
           {{ selectedDinosaur || "Choose a dinosaur" }}

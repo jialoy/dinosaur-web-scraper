@@ -1,5 +1,60 @@
+@import "../../../assets/styles/variables";
+
 .main-container {
   width: 90%;
   height: 90vh;
   margin: 0 auto;
+  display: grid;
+  grid-template-rows: 100px 1fr; // Header fixed height
+  // grid-template-columns: 1fr 1fr; // 50% 50%
+  grid-template-columns: 2fr 3fr; // 40% 60%
+  grid-template-areas:
+    "header header"
+    "left-panel right-panel";
+  gap: 1rem; // Adds spacing between grid items
 }
+
+.header {
+  grid-area: header;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  // border: 1px dashed $border-colour;
+
+  h1 {
+    margin: 0;
+    font-size: $font-size-giant;
+  }
+}
+
+.left-panel {
+  grid-area: left-panel;
+  padding: 1rem;
+  overflow-y: auto;
+  // border: 1px dashed $border-colour;
+}
+
+.right-panel {
+  grid-area: right-panel;
+  padding: 1rem;
+  overflow-y: auto;
+  // border: 1px dashed $border-colour;
+}
+
+// Responsive breakpoint - stack on mobile
+@media (max-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr; // Single column
+    grid-template-areas:
+      "header"
+      "left-panel"
+      "right-panel";
+  }
+}
+
+// @media (min-width: 769px) {
+//   .main-container {
+//     grid-template-columns: 2fr 3fr; // 40% and 60% ratio
+//   }
+// }

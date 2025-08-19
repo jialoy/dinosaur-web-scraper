@@ -2,12 +2,13 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { DinoDataFetchService } from "../../services/dinoDataFetch.service";
 import { DropdownComponent } from "../dropdown/dropdown.component";
+import { CardComponent } from "../card/card.component";
 import { DinosaurEntry } from "../../shared/types";
 import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-main-container",
-  imports: [DropdownComponent, CommonModule],
+  imports: [DropdownComponent, CardComponent, CommonModule],
   templateUrl: "./main-container.html",
   styleUrls: ["./main-container.component.scss"],
 })
@@ -29,7 +30,6 @@ export class MainContainer implements OnInit {
       const dinosaurName = params["dinosaurName"];
       if (dinosaurName) {
         this.selectedDinosaurName = dinosaurName;
-        this.selectDinosaurByName = dinosaurName;
       } else {
         this.selectedDinosaur = null;
         this.selectedDinosaurName = "";
@@ -57,6 +57,8 @@ export class MainContainer implements OnInit {
       // Navigate to the dinosaur route
       const dinosaurPath = dinosaur.name.toLowerCase();
       this.router.navigate([dinosaurPath]);
+
+      // this.displayDinosaurInfo(dinosaur.name);
     } else {
       console.log("No dinosaur selected");
       // Navigate back to home
@@ -64,11 +66,11 @@ export class MainContainer implements OnInit {
     }
   }
 
-  private selectDinosaurByName(name: string): void {
-    const dino = this.dinosaurs.find((d) => d.name.toLowerCase() === name.toLowerCase());
-    if (dino) {
-      this.selectedDinosaur = dino;
-      console.log("Selected dinosaur from route:", dino);
-    }
-  }
+  // private displayDinosaurInfo(name: string): void {
+  //   const dinosaurEntry = this.dinosaurs.find(
+  //     (dino) => dino.name.toLowerCase() === name.toLowerCase()
+  //   );
+  //   console.log("Placeholder function to show info for", name);
+  //   // console.log(dinosaurEntry);
+  // }
 }

@@ -1,19 +1,29 @@
 <div class="main-container">
-  <app-dropdown
-    [dinosaurs]="dinosaurs"
-    [selectedDinosaur]="selectedDinosaurName"
-    (dinosaurSelected)="onDinosaurSelected($event)"
-  ></app-dropdown>
+  <div class="header"></div>
 
-  <div *ngIf="!selectedDinosaur && dinosaurs.length > 0" class="no-selection">
-    <p>Dinosaur data loaded!</p>
+  <div class="left-panel">
+    <app-dropdown
+      [dinosaurs]="dinosaurs"
+      [selectedDinosaur]="selectedDinosaurName"
+      (dinosaurSelected)="onDinosaurSelected($event)"
+    >
+    </app-dropdown>
+
+    <div *ngIf="!selectedDinosaur && dinosaurs.length > 0" class="no-selection">
+      <p>Dinosaur data loaded!</p>
+    </div>
+
+    <div *ngIf="dinosaurs.length === 0" class="loading">
+      <p>Retrieving dinosaur data...</p>
+    </div>
   </div>
 
-  <div *ngIf="dinosaurs.length === 0" class="loading">
-    <p>Retrieving dinosaur data...</p>
-  </div>
-
-  <div *ngIf="selectedDinosaur" class="info">
-    <p>Currently logging {{ selectedDinosaur.name }} to console!</p>
+  <div class="right-panel">
+    <div *ngIf="selectedDinosaur" class="info">
+      <app-card [dinosaur]="selectedDinosaur"></app-card>
+    </div>
+    <div *ngIf="!selectedDinosaur" class="placeholder">
+      <p>Select a dinosaur to view information</p>
+    </div>
   </div>
 </div>

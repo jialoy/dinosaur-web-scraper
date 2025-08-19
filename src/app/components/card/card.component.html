@@ -1,0 +1,41 @@
+<div class="dinosaur-card" *ngIf="dinosaur">
+  <div class="image-section">
+    <div *ngIf="hasValidImage; else noImage">
+      <img
+        [src]="imagePath"
+        [alt]="dinosaur?.name + ' (' + dinosaur?.classification + ')'"
+        class="dinosaur-image"
+        (error)="$event.target.style.display = 'none'"
+      />
+    </div>
+    <ng-template #noImage>
+      <div class="no-image-placeholder">
+        <span class="dinosaur-icon">🦕</span>
+        <p>Placeholder (clade unknown)</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="info-section">
+    <h2>{{ dinosaur?.name }}</h2>
+
+    <div class="info-field" *ngIf="dinosaur.classification">
+      <strong>Clade:</strong> {{ dinosaur?.classification }}
+    </div>
+
+    <div class="info-field" *ngIf="dinosaur.historicalPeriod">
+      <strong>Era:</strong> {{ dinosaur?.historicalPeriod }}
+    </div>
+
+    <div class="info-field" *ngIf="dinosaur.length">
+      <strong>Length:</strong> {{ dinosaur?.length }} (or approximately
+      {{ convertLength(dinosaur?.length) }})
+    </div>
+
+    <div class="info-field" *ngIf="dinosaur.weight">
+      <strong>Weight:</strong> {{ dinosaur?.weight }}
+    </div>
+
+    <div class="info-field" *ngIf="dinosaur.diet"><strong>Diet:</strong> {{ dinosaur?.diet }}</div>
+  </div>
+</div>
