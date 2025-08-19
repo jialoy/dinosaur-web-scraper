@@ -4,4 +4,5 @@ export interface DinosaurEntry {
   length: string;
   weight: string;
   diet: string;
+  classification?: string;
 }
