@@ -1,0 +1,55 @@
+@import "../../../assets/styles/variables";
+
+.radio-group-container {
+  margin-bottom: 40px;
+
+  .radio-group-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: $font-size-base;
+  }
+
+  .radio-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .radio-input {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+
+        &:checked {
+          accent-color: $highlight-colour;
+        }
+      }
+
+      .radio-label {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          color: $highlight-colour;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .radio-group-container {
+    padding: 0.75rem;
+
+    .radio-options {
+      gap: 6px;
+    }
+  }
+}

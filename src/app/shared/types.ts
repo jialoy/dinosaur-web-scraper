@@ -6,3 +6,8 @@ export interface DinosaurEntry {
   diet: string;
   classification?: string;
 }
+
+export interface FilterOption {
+  value: string;
+  label: string;
+}

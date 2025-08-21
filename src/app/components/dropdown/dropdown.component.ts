@@ -15,7 +15,6 @@ import { DinosaurEntry } from "../../../app/shared/types";
         </span>
         <span class="arrow" [class.rotated]="isOpen">▼</span>
       </div>
-
       <div class="dropdown-menu" [class.visible]="isOpen" *ngIf="isOpen">
         <div class="dropdown-options">
           <div class="option" [class.selected]="!selectedDinosaur" (click)="selectOption(null)">
