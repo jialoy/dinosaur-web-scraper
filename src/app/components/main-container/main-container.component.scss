@@ -36,7 +36,7 @@
 
   .no-selection {
     margin-top: 16px;
-    color: #888;
+    color: $font-colour-secondary;
     font-style: italic;
 
     p {
@@ -63,8 +63,22 @@
   }
 }
 
-// @media (min-width: 769px) {
-//   .main-container {
-//     grid-template-columns: 2fr 3fr; // 40% and 60% ratio
-//   }
-// }
+// Responsive breakpoint - stack on mobile
+@media (max-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr; // Single column
+    grid-template-areas:
+      "header"
+      "left-panel"
+      "right-panel";
+  }
+
+  .left-panel {
+    overflow-y: visible; // Remove scrollbar, show all content
+  }
+
+  .right-panel {
+    overflow-y: visible; // Remove scrollbar, show all content
+    padding-bottom: 50px;
+  }
+}

@@ -17,7 +17,8 @@ export class MainContainer implements OnInit {
   dinosaurs: DinosaurEntry[] = [];
   filteredDinosaurs: DinosaurEntry[] = []; // After radio filter is applied
   selectedDinosaur: DinosaurEntry | null = null;
-  selectedPeriodFilter: string = "None"; // Default no filtering on dinosaurs
+  selectedPeriodFilter: string = "None"; // Default no period filtering on dinosaurs
+  selectedClassificationFilter: string = "None"; // Default no classification filtering on dinosaurs
   private routeDinosaurName: string = ""; // To store dinosaur name for route parameter handling
 
   periodFilterOptions: FilterOption[] = [
@@ -25,6 +26,13 @@ export class MainContainer implements OnInit {
     { value: "Triassic", label: "Triassic" },
     { value: "Jurassic", label: "Jurassic" },
     { value: "Cretaceous", label: "Cretaceous" },
+  ];
+
+  classificationFilterOptions: FilterOption[] = [
+    { value: "None", label: "None" },
+    { value: "Theropoda", label: "Theropoda" },
+    { value: "Sauropodomorpha", label: "Sauropodomorpha" },
+    { value: "Ornithischia", label: "Ornithischia" },
   ];
 
   constructor(
@@ -54,7 +62,7 @@ export class MainContainer implements OnInit {
     this.dinoDataFetchService.getDinosaurData().subscribe(
       (data: DinosaurEntry[]) => {
         this.dinosaurs = data;
-        this.applyPeriodFilter();
+        this.applyFilters();
 
         if (this.routeDinosaurName) {
           this.setSelectedDinosaur(this.routeDinosaurName);
@@ -78,22 +86,14 @@ export class MainContainer implements OnInit {
    */
   onPeriodFilterChanged(selectedPeriod: string): void {
     this.selectedPeriodFilter = selectedPeriod;
-    this.applyPeriodFilter();
+    this.applyFilters();
+    this.handleFilteredSelectionUpdate();
+  }
 
-    // Handle update if period filter option is changed and the already-selected dinosaur is not
-    // part of the filtered group (clear selection and navigate home)
-    if (
-      this.selectedDinosaur &&
-      !this.filteredDinosaurs.some((dino) => dino.name === this.selectedDinosaur?.name)
-    ) {
-      // Current selection is filtered out, clear it and navigate to home
-      this.selectedDinosaur = null;
-
-      // Use setTimeout to ensure the change detection cycle completes
-      setTimeout(() => {
-        this.router.navigate([""]);
-      }, 0);
-    }
+  onClassificationFilterChanged(selectedClassification: string): void {
+    this.selectedClassificationFilter = selectedClassification;
+    this.applyFilters();
+    this.handleFilteredSelectionUpdate();
   }
 
   /**
@@ -115,17 +115,48 @@ export class MainContainer implements OnInit {
   }
 
   /**
-   * Filter the dinosaur entries based on the selected option in the period filter.
+   * Filter the dinosaur entries based on selected period and classification filters.
    */
-  applyPeriodFilter(): void {
-    if (this.selectedPeriodFilter === "None") {
-      this.filteredDinosaurs = [...this.dinosaurs];
-    } else {
-      this.filteredDinosaurs = this.dinosaurs.filter((dinosaur) =>
+  private applyFilters(): void {
+    let filtered = [...this.dinosaurs];
+
+    // Apply period filter
+    if (this.selectedPeriodFilter !== "None") {
+      filtered = filtered.filter((dinosaur) =>
         dinosaur.historicalPeriod.toLowerCase().includes(this.selectedPeriodFilter.toLowerCase())
       );
     }
-    console.log(this.filteredDinosaurs);
+
+    // Apply classification filter
+    if (this.selectedClassificationFilter !== "None") {
+      filtered = filtered.filter((dinosaur) =>
+        dinosaur.classification
+          ?.toLowerCase()
+          .includes(this.selectedClassificationFilter.toLowerCase())
+      );
+    }
+
+    this.filteredDinosaurs = filtered;
+    console.log("Filtered dinosaurs:", this.filteredDinosaurs);
+  }
+
+  /**
+   * Handle updating the selected dinosaur when filters change.
+   */
+  private handleFilteredSelectionUpdate(): void {
+    // Check if current selection is still valid after filtering
+    if (
+      this.selectedDinosaur &&
+      !this.filteredDinosaurs.some((dino) => dino.name === this.selectedDinosaur?.name)
+    ) {
+      // If current selection is filtered out, clear it and navigate to home
+      this.selectedDinosaur = null;
+
+      // Use setTimeout to ensure the change detection cycle completes
+      setTimeout(() => {
+        this.router.navigate([""]);
+      }, 0);
+    }
   }
 
   private setSelectedDinosaur(dinosaurName: string): void {

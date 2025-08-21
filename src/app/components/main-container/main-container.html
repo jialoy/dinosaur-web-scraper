@@ -3,9 +3,18 @@
 
   <div class="left-panel">
     <app-radio-group
+      title="era"
       [options]="periodFilterOptions"
       [selectedValue]="selectedPeriodFilter"
       (radioButtonSelected)="onPeriodFilterChanged($event)"
+    >
+    </app-radio-group>
+
+    <app-radio-group
+      title="clade"
+      [options]="classificationFilterOptions"
+      [selectedValue]="selectedClassificationFilter"
+      (radioButtonSelected)="onClassificationFilterChanged($event)"
     >
     </app-radio-group>
 
@@ -25,7 +34,7 @@
     </div>
 
     <div *ngIf="filteredDinosaurs.length === 0" class="no-selection">
-      <p>No dinosaurs found for this era :(</p>
+      <p>No dinosaurs for this era and classification combo :(</p>
     </div>
   </div>
 

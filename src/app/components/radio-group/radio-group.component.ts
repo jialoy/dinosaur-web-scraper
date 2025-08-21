@@ -8,18 +8,18 @@ import { FilterOption } from "../../shared/types";
   imports: [CommonModule],
   template: `
     <div class="radio-group-container">
-      <label class="radio-group-label">Filter dinosaurs by era:</label>
+      <label class="radio-group-label">Filter dinosaurs by {{ title }}:</label>
       <div class="radio-options">
         <div *ngFor="let option of options" class="radio-option">
           <input
             type="radio"
-            [id]="'radio-' + option.value"
+            [id]="'radio-' + title + '-' + option.value"
             [value]="option.value"
             [checked]="selectedValue === option.value"
             (change)="onSelectionChange(option.value)"
             class="radio-input"
           />
-          <label [for]="'radio-' + option.value" class="radio-label">
+          <label [for]="'radio-' + title + '-' + option.value" class="radio-label">
             {{ option.label }}
           </label>
         </div>
@@ -29,6 +29,7 @@ import { FilterOption } from "../../shared/types";
   styleUrls: ["./radio-group.component.scss"],
 })
 export class RadioGroupComponent {
+  @Input() title: string = "";
   @Input() options: FilterOption[] = [];
   @Input() selectedValue: string = "None";
   @Output() radioButtonSelected = new EventEmitter<string>();
