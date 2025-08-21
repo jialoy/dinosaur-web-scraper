@@ -15,7 +15,7 @@
       </div>
     </ng-template>
 
-    <div class="length-visualisation" *ngIf="dinosaur?.length">
+    <div class="length-visualisation" *ngIf="dinosaur?.length && showKayakVisualisation()">
       <div
         *ngFor="let kayakImageData of getKayakVisualisationData(); let i = index"
         class="length-image-container"

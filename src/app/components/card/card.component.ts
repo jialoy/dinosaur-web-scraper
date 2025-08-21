@@ -50,6 +50,21 @@ export class CardComponent {
   }
 
   /**
+   * Whether or not to show the kayak visualisation.
+   */
+  showKayakVisualisation(): boolean {
+    const kayakValue = parseFloat(this.convertLength(this.dinosaur?.length)) || 0;
+    const totalImages = Math.ceil(kayakValue);
+
+    // Don't show if there's only one image and crop percentage is 40% or less
+    if (totalImages === 1 && kayakValue <= 0.4) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Calculate CSS properties for visualising length in kayaks for a given dinosaur
    */
   getKayakVisualisationData(): KayakVisualisationData[] {
