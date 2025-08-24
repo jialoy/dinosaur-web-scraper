@@ -2,6 +2,13 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
 
+Dinosaur data is scraped from [thoughtco.com](https://thoughtco.com).
+Dinosaur clade information from Wikipedia's infobox for each dinosaur using [Wikipedia's API](https://en.wikipedia.org/w/api.php).
+
+Information about a single dinosaur can be viewed in the 'Card' tab, and property comparison can be view in the 'Chart' tab.
+
+To access the scraped data in json format, navigate to the endpoint `http://localhost:4200/api/scraper` after build.
+
 ## Dependencies
 
 - **Node.js** `v18++`
@@ -13,6 +20,7 @@ To check your node and npm version:
 node -v
 npm -v
 ```
+
 See [here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for instructions on downloading and installing Node.js and npm
 
 ## To run locally
@@ -47,4 +55,4 @@ npm start
 ```
 
 This starts the backend server to scrape on `http://localhost:3000/` and the frontend server on `http://localhost:4200/`.
-Open your browser and navigate to `http://localhost:4200/`, wait for scraping to complete and then access dinosaur data.
+Open your browser and navigate to `http://localhost:4200/`, wait for scraping to complete and then view dinosaur data.
