@@ -1,6 +1,6 @@
+// dropdown.component.ts
 import { Component, Input, Output, EventEmitter, HostListener } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { DinosaurEntry } from "../../../app/shared/types";
 
 @Component({
   selector: "app-dropdown",
@@ -8,25 +8,22 @@ import { DinosaurEntry } from "../../../app/shared/types";
   imports: [CommonModule],
   template: `
     <div class="dropdown-container">
-      <label class="dropdown-label">Dinosaur:</label>
+      <label class="dropdown-label">Select...</label>
       <div class="dropdown-trigger" (click)="toggleDropdown()" [class.open]="isOpen">
         <span class="selected-text">
-          {{ selectedDinosaur || "Choose a dinosaur" }}
+          {{ selectedOption || "Choose an option" }}
         </span>
         <span class="arrow" [class.rotated]="isOpen">▼</span>
       </div>
       <div class="dropdown-menu" [class.visible]="isOpen" *ngIf="isOpen">
         <div class="dropdown-options">
-          <div class="option" [class.selected]="!selectedDinosaur" (click)="selectOption(null)">
-            &nbsp;
-          </div>
           <div
-            *ngFor="let dino of dinosaurs"
+            *ngFor="let option of options"
             class="option"
-            [class.selected]="selectedDinosaur === dino.name"
-            (click)="selectOption(dino)"
+            [class.selected]="selectedOption === option"
+            (click)="selectOption(option)"
           >
-            {{ dino.name }}
+            {{ option }}
           </div>
         </div>
       </div>
@@ -35,9 +32,9 @@ import { DinosaurEntry } from "../../../app/shared/types";
   styleUrls: ["./dropdown.component.scss"],
 })
 export class DropdownComponent {
-  @Input() dinosaurs!: DinosaurEntry[];
-  @Input() selectedDinosaur: string = "";
-  @Output() dinosaurSelected = new EventEmitter<DinosaurEntry | null>();
+  @Input() options: string[] = [];
+  @Input() selectedOption: string = "";
+  @Output() optionSelected = new EventEmitter<string>();
 
   isOpen = false;
 
@@ -45,10 +42,10 @@ export class DropdownComponent {
     this.isOpen = !this.isOpen;
   }
 
-  selectOption(dinosaur: DinosaurEntry | null): void {
+  selectOption(option: string): void {
     this.isOpen = false;
-    this.selectedDinosaur = dinosaur ? dinosaur.name : "";
-    this.dinosaurSelected.emit(dinosaur);
+    this.selectedOption = option;
+    this.optionSelected.emit(option);
   }
 
   @HostListener("document:click", ["$event"])

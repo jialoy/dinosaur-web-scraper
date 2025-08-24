@@ -1,25 +1,41 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { DinoDataFetchService } from "../../services/dinoDataFetch.service";
+import { DinoDataFetchService } from "../../services/dino-data-fetch";
+import { TabsComponent } from "../tabs/tabs.component";
 import { DropdownComponent } from "../dropdown/dropdown.component";
 import { CardComponent } from "../card/card.component";
+import { ChartComponent } from "../chart/chart.component";
 import { RadioGroupComponent } from "../radio-group/radio-group.component";
 import { DinosaurEntry, FilterOption } from "../../shared/types";
 import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-main-container",
-  imports: [DropdownComponent, CardComponent, RadioGroupComponent, CommonModule],
+  imports: [
+    TabsComponent,
+    DropdownComponent,
+    CardComponent,
+    ChartComponent,
+    RadioGroupComponent,
+    CommonModule,
+  ],
   templateUrl: "./main-container.html",
   styleUrls: ["./main-container.component.scss"],
 })
 export class MainContainer implements OnInit {
+  activeTab: "Card" | "Chart" = "Card";
+
   dinosaurs: DinosaurEntry[] = [];
-  filteredDinosaurs: DinosaurEntry[] = []; // After radio filter is applied
+  filteredDinosaurs: DinosaurEntry[] = []; // After radio filters are applied
+
   selectedDinosaur: DinosaurEntry | null = null;
   selectedPeriodFilter: string = "None"; // Default no period filtering on dinosaurs
   selectedClassificationFilter: string = "None"; // Default no classification filtering on dinosaurs
-  private routeDinosaurName: string = ""; // To store dinosaur name for route parameter handling
+
+  chartOptions = ["Length", "Weight"];
+  selectedChart: string = "";
+
+  private routeDinosaurName: string = "";
 
   periodFilterOptions: FilterOption[] = [
     { value: "None", label: "None" },
@@ -46,19 +62,23 @@ export class MainContainer implements OnInit {
 
     this.route.params.subscribe((params) => {
       const dinosaurName = params["dinosaurName"];
+      const chartOption = params["chartOption"];
+
       if (dinosaurName) {
-        // Set routeDinosaurName param to use when updating the route
+        this.activeTab = "Card";
         this.routeDinosaurName = dinosaurName;
-        // Set the dinosaur object based on the route parameter
         this.setSelectedDinosaur(dinosaurName);
+      } else if (chartOption) {
+        this.activeTab = "Chart";
+        this.selectedChart = chartOption.toLowerCase();
       } else {
-        // Clear selectedDinosaur when there is no route parameter
         this.selectedDinosaur = null;
+        this.selectedChart = "";
       }
     });
   }
 
-  fetchDinoData() {
+  fetchDinoData(): void {
     this.dinoDataFetchService.getDinosaurData().subscribe(
       (data: DinosaurEntry[]) => {
         this.dinosaurs = data;
@@ -82,36 +102,39 @@ export class MainContainer implements OnInit {
   }
 
   /**
-   * Filter dinosaur entries by calling applyFilter when a selection is made in the period filter.
+   * Getter to derive dinosaur dropdown options
    */
+  get dinosaurOptions(): string[] {
+    return this.filteredDinosaurs.map((d) => d.name);
+  }
+
+  onTabChange(tab: string): void {
+    if (tab !== "Card" && tab !== "Chart") return;
+    this.activeTab = tab;
+
+    this.updateUrlForTab();
+  }
+
   onPeriodFilterChanged(selectedPeriod: string): void {
     this.selectedPeriodFilter = selectedPeriod;
     this.applyFilters();
-    this.handleFilteredSelectionUpdate();
+    this.syncSelectionWithFilters();
   }
 
   onClassificationFilterChanged(selectedClassification: string): void {
     this.selectedClassificationFilter = selectedClassification;
     this.applyFilters();
-    this.handleFilteredSelectionUpdate();
+    this.syncSelectionWithFilters();
   }
 
-  /**
-   * Navigate to the correct route based on user's selected dinousaur
-   */
-  onDinosaurSelected(dinosaur: DinosaurEntry | null): void {
-    this.selectedDinosaur = dinosaur;
+  onDinosaurSelected(dinosaurName: string): void {
+    this.selectedDinosaur = this.filteredDinosaurs.find((d) => d.name === dinosaurName) || null;
+    this.updateUrlForTab();
+  }
 
-    if (dinosaur) {
-      console.log("Selected dinosaur:", dinosaur);
-      // Navigate to the dinosaur route
-      const dinosaurPath = dinosaur.name.toLowerCase();
-      this.router.navigate([dinosaurPath]);
-    } else {
-      console.log("No dinosaur selected");
-      // Navigate back to home
-      this.router.navigate([""]);
-    }
+  onChartSelected(option: string): void {
+    this.selectedChart = option;
+    this.updateUrlForTab();
   }
 
   /**
@@ -120,52 +143,67 @@ export class MainContainer implements OnInit {
   private applyFilters(): void {
     let filtered = [...this.dinosaurs];
 
-    // Apply period filter
     if (this.selectedPeriodFilter !== "None") {
-      filtered = filtered.filter((dinosaur) =>
-        dinosaur.historicalPeriod.toLowerCase().includes(this.selectedPeriodFilter.toLowerCase())
+      filtered = filtered.filter((d) =>
+        d.historicalPeriod.toLowerCase().includes(this.selectedPeriodFilter.toLowerCase())
       );
     }
 
-    // Apply classification filter
     if (this.selectedClassificationFilter !== "None") {
-      filtered = filtered.filter((dinosaur) =>
-        dinosaur.classification
-          ?.toLowerCase()
-          .includes(this.selectedClassificationFilter.toLowerCase())
+      filtered = filtered.filter((d) =>
+        d.classification?.toLowerCase().includes(this.selectedClassificationFilter.toLowerCase())
       );
     }
 
     this.filteredDinosaurs = filtered;
-    console.log("Filtered dinosaurs:", this.filteredDinosaurs);
+    console.log(this.filteredDinosaurs);
   }
 
   /**
-   * Handle updating the selected dinosaur when filters change.
+   * Check if the currently selected dinosaur or chart option is still valid after new filters are
+   * applied, and reset selectedDinosaur or selectedChart if it should be filtered out (in the case
+   * of dinosaur) or there is no filtered data to display (in the case of chart).
    */
-  private handleFilteredSelectionUpdate(): void {
-    // Check if current selection is still valid after filtering
+  private syncSelectionWithFilters(): void {
     if (
       this.selectedDinosaur &&
-      !this.filteredDinosaurs.some((dino) => dino.name === this.selectedDinosaur?.name)
+      !this.filteredDinosaurs.some((d) => d.name === this.selectedDinosaur!.name)
     ) {
-      // If current selection is filtered out, clear it and navigate to home
       this.selectedDinosaur = null;
-
-      // Use setTimeout to ensure the change detection cycle completes
-      setTimeout(() => {
-        this.router.navigate([""]);
-      }, 0);
     }
+
+    if (this.activeTab === "Chart" && this.filteredDinosaurs.length === 0) {
+      this.selectedChart = "";
+    }
+
+    this.updateUrlForTab();
+  }
+
+  /**
+   * Handle routing in each tab.
+   */
+  private updateUrlForTab(): void {
+    let routePath: string[] = [];
+    if (this.activeTab === "Card") {
+      if (this.selectedDinosaur) {
+        routePath = ["card", this.selectedDinosaur.name.toLowerCase()];
+      } else {
+        routePath = [""];
+      }
+    } else if (this.activeTab === "Chart") {
+      if (this.selectedChart && this.filteredDinosaurs.length > 0) {
+        routePath = ["chart", this.selectedChart.toLowerCase()];
+      } else {
+        routePath = [""];
+      }
+    }
+    this.router.navigate(routePath);
   }
 
   private setSelectedDinosaur(dinosaurName: string): void {
     const dinosaur = this.dinosaurs.find(
-      (dino) => dino.name.toLowerCase() === dinosaurName.toLowerCase()
+      (d) => d.name.toLowerCase() === dinosaurName.toLowerCase()
     );
-
-    if (dinosaur) {
-      this.selectedDinosaur = dinosaur;
-    }
+    if (dinosaur) this.selectedDinosaur = dinosaur;
   }
 }

@@ -1,5 +1,11 @@
 <div class="main-container">
-  <div class="header"></div>
+  <div class="header">
+    <app-tabs
+      [tabs]="['Card', 'Chart']"
+      [activeTab]="activeTab"
+      (tabSelected)="onTabChange($event)"
+    ></app-tabs>
+  </div>
 
   <div class="left-panel">
     <app-radio-group
@@ -17,34 +23,63 @@
       (radioButtonSelected)="onClassificationFilterChanged($event)"
     >
     </app-radio-group>
-
-    <app-dropdown
-      [dinosaurs]="filteredDinosaurs"
-      [selectedDinosaur]="selectedDinosaurName"
-      (dinosaurSelected)="onDinosaurSelected($event)"
-    >
-    </app-dropdown>
-
-    <div *ngIf="!selectedDinosaur && dinosaurs.length > 0" class="no-selection">
-      <p>Dinosaur data loaded!</p>
-    </div>
-
-    <div *ngIf="dinosaurs.length === 0" class="loading">
-      <p>Retrieving dinosaur data...</p>
-    </div>
-
-    <div *ngIf="filteredDinosaurs.length === 0" class="no-selection">
-      <p>No dinosaurs for this era and classification combo :(</p>
-    </div>
   </div>
 
   <div class="right-panel">
-    <div *ngIf="selectedDinosaur" class="info">
-      <app-card [dinosaur]="selectedDinosaur"></app-card>
+    <div class="dropdown">
+      <div *ngIf="activeTab === 'Card'">
+        <app-dropdown
+          [options]="dinosaurOptions"
+          [selectedOption]="selectedDinosaurName"
+          (optionSelected)="onDinosaurSelected($event)"
+        >
+        </app-dropdown>
+
+        <div *ngIf="!selectedDinosaur && dinosaurs.length > 0" class="no-selection">
+          <p>Dinosaur data loaded!</p>
+        </div>
+
+        <div *ngIf="dinosaurs.length === 0" class="loading">
+          <p>Retrieving dinosaur data...</p>
+        </div>
+
+        <div
+          *ngIf="
+            filteredDinosaurs.length === 0 &&
+            dinosaurs.length > 0 &&
+            selectedPeriodFilter &&
+            selectedClassificationFilter
+          "
+          class="no-selection"
+        >
+          <p>No dinosaurs for this era and classification combo :(</p>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'Chart'">
+        <app-dropdown
+          [options]="chartOptions"
+          [selectedOption]="selectedChart"
+          (optionSelected)="onChartSelected($event)"
+        ></app-dropdown>
+
+        <div
+          *ngIf="(filteredDinosaurs?.length ?? 0) === 0 && (dinosaurs?.length ?? 0) > 0"
+          class="no-selection"
+        >
+          <p>No dinosaurs for this era and classification combo :(</p>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="!selectedDinosaur" class="placeholder">
-      <p>Select a dinosaur to view information</p>
+    <div class="content">
+      <div *ngIf="activeTab === 'Card' && selectedDinosaur" class="info">
+        <app-card [dinosaur]="selectedDinosaur"></app-card>
+      </div>
+
+      <div *ngIf="activeTab === 'Chart' && selectedChart && filteredDinosaurs.length > 0">
+        <app-chart [data]="filteredDinosaurs" [key]="selectedChart"></app-chart>
+      </div>
     </div>
   </div>
 </div>

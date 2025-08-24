@@ -11,3 +11,6 @@ export interface FilterOption {
   value: string;
   label: string;
 }
+
+// Limit to data keys that could be visualised
+export type dinosaurDataKey = "length" | "weight";

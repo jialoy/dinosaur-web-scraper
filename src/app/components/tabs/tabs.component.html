@@ -1,0 +1,10 @@
+<div class="tabs">
+  <div
+    *ngFor="let tab of tabs"
+    class="tab"
+    [class.active]="tab === activeTab"
+    (click)="onTabClick(tab)"
+  >
+    {{ tab }}
+  </div>
+</div>

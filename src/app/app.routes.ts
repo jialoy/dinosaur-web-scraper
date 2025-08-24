@@ -7,7 +7,11 @@ export const routes: Routes = [
     component: MainContainer,
   },
   {
-    path: ":dinosaurName",
+    path: "card/:dinosaurName",
+    component: MainContainer,
+  },
+  {
+    path: "chart/:chartOption",
     component: MainContainer,
   },
   {

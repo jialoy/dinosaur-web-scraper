@@ -13,3 +13,35 @@ body {
   color: $font-colour-primary;
   background-color: $body-bg;
 }
+
+.chart-tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 6px;
+  padding: 10px 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-tooltip.tooltip-visible {
+  opacity: 1;
+}
+
+.chart-tooltip .tooltip-content {
+  color: white;
+  font-family: "Arial", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.chart-tooltip .tooltip-content strong {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}

@@ -1,0 +1,125 @@
+@import "../../../assets/styles/variables";
+
+.chart-container {
+  width: 100%;
+  height: auto;
+  min-height: 500px;
+  max-height: 1000px; // Prevent excessive height
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  // padding: 20px;
+  box-sizing: border-box;
+
+  svg {
+    width: 100%;
+    height: auto;
+    background-color: $body-bg;
+    border-radius: $border-radius;
+    // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    // Axis styling
+    :deep(.x-axis),
+    :deep(.y-axis) {
+      .domain {
+        stroke: #666;
+        stroke-width: 1px;
+      }
+
+      .tick line {
+        stroke: #999;
+        stroke-width: 0.5px;
+      }
+
+      .tick text {
+        fill: #555;
+        font-family: "Arial", sans-serif;
+        font-size: 11px;
+      }
+    }
+
+    // Make Y-axis text more readable for longer names
+    :deep(.y-axis) {
+      .tick text {
+        font-size: $font-size-small;
+      }
+    }
+
+    // Bar styling
+    :deep(.bar) {
+      cursor: pointer;
+      transition: opacity 0.2s ease, stroke-width 0.2s ease;
+
+      &.bar-hover {
+        opacity: 0.7;
+        stroke-width: 2px;
+      }
+    }
+
+    // Label styling
+    :deep(.bar-label) {
+      font-size: 12px;
+      font-weight: bold;
+      fill: $font-colour-primary;
+      pointer-events: none;
+    }
+
+    // Axis label styling
+    :deep(.x-label),
+    :deep(.y-label) {
+      font-size: $font-size-larger;
+      font-weight: bold;
+      fill: #333;
+      text-anchor: middle;
+    }
+
+    :deep(.chart-title) {
+      font-size: 16px;
+      font-weight: bold;
+      fill: #222;
+      text-anchor: middle;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 10px;
+
+    svg {
+      :deep(.bar-label) {
+        font-size: 10px !important;
+      }
+
+      :deep(.x-axis),
+      :deep(.y-axis) {
+        .tick text {
+          font-size: 9px !important;
+        }
+      }
+
+      :deep(.x-label),
+      :deep(.y-label) {
+        font-size: 12px !important;
+      }
+
+      :deep(.chart-title) {
+        font-size: 14px !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    min-height: 300px;
+
+    svg {
+      :deep(.x-axis) {
+        .tick text {
+          font-size: 8px !important;
+        }
+      }
+    }
+  }
+}
